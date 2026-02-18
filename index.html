@@ -91,7 +91,12 @@
         </div>
         <div id="manualMsg" class="msg"></div>
     </div>
-
+<div class="panel">
+  <div><b>Sensor Debug</b></div>
+  <div>z: <span id="debugZ">—</span></div>
+  <div>Status: <span id="debugState">Warte…</span></div>
+</div>
+    
 <!--    <div class="panel">-->
 <!--        <div class="msg">-->
 <!--            Tipp: Auf iPhone am besten in <b>Safari</b> öffnen (nicht in In-App Browsern).-->
@@ -284,7 +289,45 @@
         $("btnStart").disabled = false;
         $("btnStop").disabled = true;
     }
+function startDebugMotion(){
 
+  async function ensurePermission(){
+    if (typeof DeviceMotionEvent !== "undefined" &&
+        typeof DeviceMotionEvent.requestPermission === "function") {
+
+      const res = await DeviceMotionEvent.requestPermission();
+      if (res !== "granted"){
+        alert("Sensor Permission verweigert");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function onMotion(e){
+    const g = e.accelerationIncludingGravity;
+    if (!g || typeof g.z !== "number") return;
+
+    const z = g.z;
+    document.getElementById("debugZ").textContent = z.toFixed(2);
+
+    if (z > 7){
+      document.getElementById("debugState").textContent = "📱 Display nach oben";
+    }
+    else if (z < -7){
+      document.getElementById("debugState").textContent = "📱 Display nach unten";
+    }
+    else{
+      document.getElementById("debugState").textContent = "↔️ Gekippt / seitlich";
+    }
+  }
+
+  ensurePermission().then(ok => {
+    if (ok){
+      window.addEventListener("devicemotion", onMotion, { passive: true });
+    }
+  });
+}
     async function toggleTorch(){
         if (!scanner) return;
         try{
