@@ -131,22 +131,65 @@
     }
 
     function openYouTubeMusic(videoId){
-        const musicUrl = `https://music.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+        const webUrl = `https://music.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
 
-        // The most reliable way: open the music URL.
-        // On mobile, if the app is installed, it will usually offer/redirect to the app.
-        window.location.href = musicUrl;
+        const ua = navigator.userAgent || "";
+        const isAndroid = /Android/i.test(ua);
+        const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+        if (isAndroid) {
+            // Android: intent:// ist am zuverlässigsten und öffnet die App, wenn installiert
+            const intentUrl =
+                `intent://music.youtube.com/watch?v=${encodeURIComponent(videoId)}` +
+                `#Intent;scheme=https;package=com.google.android.apps.youtube.music;end`;
+            window.location.href = intentUrl;
+
+            // Fallback (falls App nicht installiert)
+            setTimeout(() => { window.location.href = webUrl; }, 900);
+            return;
+        }
+
+        if (isIOS) {
+            // iOS: Deep link versuchen. Wenn blockiert, fällt er auf webUrl zurück.
+            // Hinweis: iOS blockt oft automatische Weiterleitung – manchmal braucht es einen Button-Klick.
+            const appUrl = `youtube-music://watch?v=${encodeURIComponent(videoId)}`;
+
+            // Versuch App
+            window.location.href = appUrl;
+
+            // Fallback auf Web nach kurzer Zeit
+            setTimeout(() => { window.location.href = webUrl; }, 900);
+            return;
+        }
+
+        // Desktop oder unbekannt: Web
+        window.location.href = webUrl;
     }
+
 
     async function handleValue(value, msgElId){
         const id = extractVideoId(value);
         if (!id){
-            $(msgElId).innerHTML = `<span class="err">Kein Video-ID erkannt.</span> Bitte Link oder ID prüfen.`;
+            $(msgElId).innerHTML =
+                `<span class="err">Kein Video-ID erkannt.</span> Bitte Link oder ID prüfen.`;
             return;
         }
-        $(msgElId).innerHTML = `Erkannt: <span class="ok">${id}</span> – öffne YouTube Music…`;
-        openYouTubeMusic(id);
+
+        $(msgElId).innerHTML = `
+      Erkannt: <span class="ok">${id}</span><br><br>
+      <button class="primary"
+        onclick="openYouTubeMusic('${id}')">
+        In YouTube Music App öffnen
+      </button>
+      <div class="msg">
+        Falls es nicht klappt:
+        <a href="https://music.youtube.com/watch?v=${id}">
+          Web öffnen
+        </a>
+      </div>
+    `;
     }
+
 
     async function startScanner(){
         $("scanStatus").textContent = "Starte Kamera…";
