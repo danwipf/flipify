@@ -55,8 +55,7 @@
     </div>
 </div>
 
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode"></script>
 
 <script>
     const MAX_SECONDS = 30;
@@ -75,40 +74,91 @@
     }
 
     async function startScanner() {
+        const status = (msg) => console.log(msg);
+
         const qr = new Html5Qrcode("reader");
-        const cams = await Html5Qrcode.getCameras();
-        await qr.start(
-            cams[0].id,
-            { fps:10, qrbox:250 },
-            async decoded => {
-                const id = extractId(decoded);
-                if (!id) return;
 
-                const db = await loadSongs();
-                const track = db[id];
-                if (!track) {
-                    alert("Song nicht in songs.json");
-                    return;
+        // iOS/Android/Chrome: prefer back camera via constraints
+        const config = { fps: 10, qrbox: 250 };
+
+        try {
+            // 1) Try: environment (rear camera)
+            await qr.start(
+                { facingMode: "environment" },
+                config,
+                async (decoded) => {
+                    const id = extractId(decoded);
+                    if (!id) return;
+
+                    const db = await loadSongs();
+                    const track = db[id];
+                    if (!track) { alert("Song nicht in songs.json"); return; }
+
+                    document.getElementById("player").style.display = "block";
+                    document.getElementById("title").textContent = track.title;
+                    document.getElementById("artist").textContent = track.artist;
+                    document.getElementById("cover").src = track.cover;
+
+                    const audio = document.getElementById("audio");
+                    audio.src = track.preview_url;
+
+                    document.getElementById("playBtn").onclick = async () => {
+                        await audio.play();
+                        setTimeout(() => { audio.pause(); audio.currentTime = 0; }, MAX_SECONDS * 1000);
+                    };
                 }
+            );
+            return;
+        } catch (e1) {
+            console.warn("facingMode environment failed:", e1);
+        }
 
-                document.getElementById("player").style.display = "block";
-                document.getElementById("title").textContent = track.title;
-                document.getElementById("artist").textContent = track.artist;
-                document.getElementById("cover").src = track.cover;
-
-                const audio = document.getElementById("audio");
-                audio.src = track.preview_url;
-
-                document.getElementById("playBtn").onclick = async () => {
-                    await audio.play();
-                    setTimeout(() => {
-                        audio.pause();
-                        audio.currentTime = 0;
-                    }, MAX_SECONDS * 1000);
-                };
+        try {
+            // 2) Fallback: pick any available camera id
+            const cams = await Html5Qrcode.getCameras();
+            if (!cams || cams.length === 0) {
+                alert("Keine Kamera gefunden (Berechtigung?)");
+                return;
             }
-        );
+
+            await qr.start(
+                { deviceId: { exact: cams[0].id } },
+                config,
+                async (decoded) => {
+                    const id = extractId(decoded);
+                    if (!id) return;
+
+                    const db = await loadSongs();
+                    const track = db[id];
+                    if (!track) { alert("Song nicht in songs.json"); return; }
+
+                    document.getElementById("player").style.display = "block";
+                    document.getElementById("title").textContent = track.title;
+                    document.getElementById("artist").textContent = track.artist;
+                    document.getElementById("cover").src = track.cover;
+
+                    const audio = document.getElementById("audio");
+                    audio.src = track.preview_url;
+
+                    document.getElementById("playBtn").onclick = async () => {
+                        await audio.play();
+                        setTimeout(() => { audio.pause(); audio.currentTime = 0; }, MAX_SECONDS * 1000);
+                    };
+                }
+            );
+        } catch (e2) {
+            console.error("Camera start failed:", e2);
+            alert(
+                "Kamera konnte nicht gestartet werden.\n\n" +
+                "Tipps:\n" +
+                "- Seite neu laden und Kamera erlauben\n" +
+                "- Andere Tabs/Apps schließen, die die Kamera nutzen\n" +
+                "- uBlock/Extensions testweise deaktivieren\n\n" +
+                "Fehler: " + (e2?.name || e2)
+            );
+        }
     }
+
 
     document.getElementById("startBtn").onclick = startScanner;
 </script>
