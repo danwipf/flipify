@@ -1,336 +1,115 @@
 ﻿<!doctype html>
 <html lang="de">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Hitster Fabia Edition</title>
-    <meta name="description" content="QR scannen → 30s Spotify Preview" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hitster</title>
     <style>
-        :root{
-            --bg:#07070a;
-            --accent:#f5a623;
-            --text:rgba(255,255,255,.92);
-            --muted:rgba(255,255,255,.65);
-            --card:rgba(255,255,255,.06);
-            --border:rgba(255,255,255,.12);
-            --radius:18px;
+        body {
+            margin:0;
+            font-family:system-ui;
+            background:#111;
+            color:white;
+            display:flex;
+            justify-content:center;
         }
-        *{box-sizing:border-box}
-        body{
-            margin:0; min-height:100vh;
-            font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-            color:var(--text);
-            background: radial-gradient(900px 600px at 50% 0%, rgba(245,166,35,.14), transparent 55%), var(--bg);
-            display:flex; justify-content:center;
+        .wrap {
+            width:100%;
+            max-width:500px;
+            padding:20px;
         }
-        .wrap{width:min(520px, 100%); padding:18px;}
-        h1{
-            margin:10px 0 6px;
-            font-weight:750;
-            letter-spacing:-.4px;
-            color:var(--accent);
-            text-align:center;
-        }
-        .sub{margin:0 0 16px; text-align:center; color:var(--muted); font-size:14px}
-        .panel{
-            background:var(--card); border:1px solid var(--border);
-            border-radius:var(--radius); padding:14px; margin:12px 0;
-        }
-        .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-        button{
-            border:1px solid var(--border);
-            background:rgba(255,255,255,.08);
-            color:var(--text);
-            padding:12px 12px;
-            border-radius:14px;
-            font-weight:650;
+        button {
+            padding:12px 16px;
+            border-radius:12px;
+            border:none;
+            font-weight:bold;
             cursor:pointer;
+            margin:6px 0;
         }
-        button.primary{
-            background:var(--accent);
-            border-color:var(--accent);
-            color:#111;
+        .primary { background:#1db954; color:black; }
+        .panel {
+            background:#1c1c1c;
+            padding:15px;
+            border-radius:16px;
+            margin-top:15px;
         }
-        button:disabled{opacity:.55; cursor:not-allowed}
-        #reader{width:100%; border-radius:14px; overflow:hidden}
-        .meta{display:flex; gap:12px; align-items:center}
-        .cover{
-            width:62px;height:62px;border-radius:14px;
-            background:rgba(255,255,255,.08);
-            border:1px solid var(--border);
-            overflow:hidden; flex:0 0 auto;
-            display:flex; align-items:center; justify-content:center;
-        }
-        .cover img{width:100%;height:100%;object-fit:cover}
-        .title{font-weight:750; margin:0}
-        .artist{margin:2px 0 0; color:var(--muted); font-size:13px}
-        .timerRow{display:flex; gap:10px; align-items:center; margin-top:10px}
-        .time{width:44px; color:var(--muted); font-variant-numeric:tabular-nums}
-        input[type="range"]{width:100%}
-        .hint{color:var(--muted); font-size:13px; margin:8px 0 0}
-        .smalllink{color:var(--muted); font-size:13px}
-        .smalllink a{color:var(--accent)}
-        .err{color:#ffb3b3}
-        .ok{color:#b7ffcf}
+        img { width:80px; border-radius:12px; }
     </style>
 </head>
 <body>
 <div class="wrap">
-    <h1>Hitster Fabia Edition</h1>
-    <p class="sub">QR scannen → 30 Sekunden Preview</p>
+    <h1>Hitster</h1>
+    <button class="primary" id="startBtn">Scanner starten</button>
+    <div id="reader" style="margin-top:15px;"></div>
 
-    <div class="panel">
-        <div class="row">
-            <button class="primary" id="btnStart">📷 Scanner starten</button>
-            <button id="btnStop" disabled>Stop</button>
-            <button id="btnTorch" disabled>🔦 Licht</button>
-        </div>
-        <p class="hint">Tipp: Kamera-Zugriff erlauben. iPhone: Safari nutzen.</p>
-        <div id="reader" style="margin-top:12px; display:none;"></div>
-        <p id="scanStatus" class="hint"></p>
-    </div>
-
-    <div class="panel" id="playerPanel" style="display:none;">
-        <div class="meta">
-            <div class="cover" id="coverBox">♪</div>
-            <div style="min-width:0">
-                <p class="title" id="trackTitle">—</p>
-                <p class="artist" id="trackArtist">—</p>
-                <div class="smalllink" id="openSpotify" style="margin-top:6px;"></div>
+    <div id="player" class="panel" style="display:none;">
+        <div style="display:flex; gap:12px; align-items:center;">
+            <img id="cover">
+            <div>
+                <div id="title"></div>
+                <div id="artist" style="opacity:.7;font-size:14px;"></div>
             </div>
         </div>
-
-        <div class="timerRow">
-            <div class="time" id="tNow">0:00</div>
-            <input id="seek" type="range" min="0" max="30" value="0" step="0.1" />
-            <div class="time" id="tEnd">0:30</div>
-        </div>
-
-        <div class="row" style="margin-top:12px">
-            <button class="primary" id="btnPlay" disabled>▶️ Play</button>
-            <button id="btnPause" disabled>⏸ Pause</button>
-            <button id="btnRestart" disabled>↺ Restart</button>
-        </div>
-
-        <p id="playerMsg" class="hint"></p>
-        <audio id="audio" preload="none"></audio>
+        <button class="primary" id="playBtn">▶ Play 30s</button>
+        <audio id="audio"></audio>
     </div>
 </div>
 
-<!-- QR Scanner Library -->
-<script src="https://unpkg.com/html5-qrcode@2.3.10/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode"></script>
 
 <script>
-    // ====== CONFIG ======
-    const SONGS_URL = "./songs.json"; // static mapping
     const MAX_SECONDS = 30;
-
-    // ====== STATE ======
     let songs = null;
-    let scanner = null;
-    let torchOn = false;
 
-    const $ = (id) => document.getElementById(id);
-
-    function fmt(sec){
-        sec = Math.max(0, Math.min(MAX_SECONDS, sec));
-        const m = Math.floor(sec / 60);
-        const s = Math.floor(sec % 60);
-        return `${m}:${String(s).padStart(2,'0')}`;
-    }
-
-    async function loadSongs(){
+    async function loadSongs() {
         if (songs) return songs;
-        const res = await fetch(SONGS_URL, { cache: "no-store" });
-        if (!res.ok) throw new Error("songs.json nicht gefunden");
+        const res = await fetch("songs.json");
         songs = await res.json();
         return songs;
     }
 
-    function extractTrackId(text){
-        // Accept formats:
-        // - https://open.spotify.com/track/<id>
-        // - spotify:track:<id>
-        // - just <id>
-        text = (text || "").trim();
-
-        const m1 = text.match(/open\.spotify\.com\/track\/([a-zA-Z0-9]{22})/);
-        if (m1) return m1[1];
-
-        const m2 = text.match(/spotify:track:([a-zA-Z0-9]{22})/);
-        if (m2) return m2[1];
-
-        const m3 = text.match(/^([a-zA-Z0-9]{22})$/);
-        if (m3) return m3[1];
-
-        return null;
+    function extractId(text) {
+        const m = text.match(/track\/([a-zA-Z0-9]{22})/);
+        return m ? m[1] : null;
     }
 
-    function showPlayer(track){
-        $("playerPanel").style.display = "block";
-        $("trackTitle").textContent = track.title || "Unbekannter Titel";
-        $("trackArtist").textContent = track.artist || "";
+    async function startScanner() {
+        const qr = new Html5Qrcode("reader");
+        const cams = await Html5Qrcode.getCameras();
+        await qr.start(
+            cams[0].id,
+            { fps:10, qrbox:250 },
+            async decoded => {
+                const id = extractId(decoded);
+                if (!id) return;
 
-        // cover
-        const coverBox = $("coverBox");
-        coverBox.innerHTML = "♪";
-        if (track.cover){
-            coverBox.innerHTML = `<img alt="" src="${track.cover}">`;
-        }
+                const db = await loadSongs();
+                const track = db[id];
+                if (!track) {
+                    alert("Song nicht in songs.json");
+                    return;
+                }
 
-        // Spotify link
-        const url = track.spotify_url || (track.id ? `https://open.spotify.com/track/${track.id}` : null);
-        $("openSpotify").innerHTML = url ? `In Spotify öffnen: <a target="_blank" rel="noreferrer" href="${url}">Link</a>` : "";
+                document.getElementById("player").style.display = "block";
+                document.getElementById("title").textContent = track.title;
+                document.getElementById("artist").textContent = track.artist;
+                document.getElementById("cover").src = track.cover;
 
-        // audio
-        const audio = $("audio");
-        audio.pause();
-        audio.currentTime = 0;
-        $("seek").value = 0;
-        $("tNow").textContent = "0:00";
+                const audio = document.getElementById("audio");
+                audio.src = track.preview_url;
 
-        if (!track.preview_url){
-            $("playerMsg").innerHTML = `<span class="err">Für diesen Song ist leider keine Spotify-Preview verfügbar.</span> Bitte in Spotify öffnen.`;
-            $("btnPlay").disabled = true;
-            $("btnPause").disabled = true;
-            $("btnRestart").disabled = true;
-            audio.removeAttribute("src");
-            return;
-        }
-
-        audio.src = track.preview_url;
-        $("playerMsg").innerHTML = `<span class="ok">Preview bereit.</span> Tippe auf Play.`;
-        $("btnPlay").disabled = false;
-        $("btnPause").disabled = false;
-        $("btnRestart").disabled = false;
-    }
-
-    function bindAudio(){
-        const audio = $("audio");
-
-        audio.addEventListener("timeupdate", () => {
-            const t = Math.min(audio.currentTime, MAX_SECONDS);
-            $("tNow").textContent = fmt(t);
-            $("seek").value = t;
-            if (audio.currentTime >= MAX_SECONDS){
-                audio.pause();
-                audio.currentTime = 0;
+                document.getElementById("playBtn").onclick = async () => {
+                    await audio.play();
+                    setTimeout(() => {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }, MAX_SECONDS * 1000);
+                };
             }
-        });
-
-        $("seek").addEventListener("input", (e) => {
-            const v = parseFloat(e.target.value || "0");
-            audio.currentTime = Math.min(v, MAX_SECONDS);
-        });
-
-        $("btnPlay").addEventListener("click", async () => {
-            try{
-                // Autoplay restrictions: must be user gesture; this is a click => OK
-                await audio.play();
-                $("playerMsg").textContent = "";
-            }catch(err){
-                $("playerMsg").innerHTML = `<span class="err">Kann nicht abspielen (Browser blockiert evtl.). Tippe nochmal.</span>`;
-            }
-        });
-
-        $("btnPause").addEventListener("click", () => audio.pause());
-        $("btnRestart").addEventListener("click", () => { audio.pause(); audio.currentTime = 0; $("seek").value = 0; });
-    }
-
-    async function onScanSuccess(decodedText){
-        const id = extractTrackId(decodedText);
-        $("scanStatus").innerHTML = id ? `Erkannt: <span class="ok">${id}</span>` : `<span class="err">QR erkannt, aber keine Spotify Track-ID gefunden.</span>`;
-
-        if (!id) return;
-
-        const db = await loadSongs();
-        const track = db[id];
-        if (!track){
-            $("playerPanel").style.display = "block";
-            $("playerMsg").innerHTML = `<span class="err">Track nicht in songs.json gefunden.</span> (ID: ${id})`;
-            $("trackTitle").textContent = "Nicht gefunden";
-            $("trackArtist").textContent = "Bitte in songs.json ergänzen";
-            $("openSpotify").innerHTML = `In Spotify öffnen: <a target="_blank" rel="noreferrer" href="https://open.spotify.com/track/${id}">Link</a>`;
-            $("coverBox").innerHTML = "♪";
-            return;
-        }
-
-        // ensure id + spotify_url
-        track.id = id;
-        if (!track.spotify_url) track.spotify_url = `https://open.spotify.com/track/${id}`;
-
-        showPlayer(track);
-    }
-
-    async function startScanner(){
-        $("reader").style.display = "block";
-        $("reader").innerHTML = "";
-        $("scanStatus").textContent = "Starte Kamera…";
-
-        scanner = new Html5Qrcode("reader");
-
-        const devices = await Html5Qrcode.getCameras();
-        const camId = devices?.[0]?.id;
-        if (!camId) throw new Error("Keine Kamera gefunden");
-
-        await scanner.start(
-            { deviceId: { exact: camId } },
-            { fps: 12, qrbox: { width: 250, height: 250 } },
-            onScanSuccess
         );
-
-        $("scanStatus").textContent = "Scanner läuft. QR in die Box halten.";
-        $("btnStart").disabled = true;
-        $("btnStop").disabled = false;
-
-        // try enable torch button if supported
-        try{
-            const caps = await scanner.getRunningTrackCapabilities();
-            if (caps && caps.torch){
-                $("btnTorch").disabled = false;
-            }
-        }catch(e){
-            // ignore
-        }
     }
 
-    async function stopScanner(){
-        torchOn = false;
-        $("btnTorch").textContent = "🔦 Licht";
-        $("btnTorch").disabled = true;
-
-        if (scanner){
-            try{ await scanner.stop(); }catch(e){}
-            try{ await scanner.clear(); }catch(e){}
-            scanner = null;
-        }
-        $("reader").style.display = "none";
-        $("scanStatus").textContent = "";
-        $("btnStart").disabled = false;
-        $("btnStop").disabled = true;
-    }
-
-    async function toggleTorch(){
-        if (!scanner) return;
-        try{
-            torchOn = !torchOn;
-            await scanner.applyVideoConstraints({ advanced: [{ torch: torchOn }] });
-            $("btnTorch").textContent = torchOn ? "🔦 Licht aus" : "🔦 Licht";
-        }catch(e){
-            $("scanStatus").innerHTML = `<span class="err">Licht nicht unterstützt.</span>`;
-            $("btnTorch").disabled = true;
-        }
-    }
-
-    // init
-    bindAudio();
-    $("tEnd").textContent = "0:30";
-    $("btnStart").addEventListener("click", () => startScanner().catch(err => {
-        $("scanStatus").innerHTML = `<span class="err">${err.message || err}</span>`;
-        stopScanner();
-    }));
-    $("btnStop").addEventListener("click", () => stopScanner());
-    $("btnTorch").addEventListener("click", () => toggleTorch());
+    document.getElementById("startBtn").onclick = startScanner;
 </script>
 </body>
 </html>
