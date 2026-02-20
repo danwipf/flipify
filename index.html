@@ -1,65 +1,133 @@
 ﻿<!doctype html>
 <html lang="de">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>Fabiatster</title>
     <style>
-        :root{
-            --bg:#07070a; --panel:#141418; --border:rgba(255,255,255,.12);
-            --text:rgba(255,255,255,.92); --muted:rgba(255,255,255,.65);
-            --accent:#ff0033; --radius:18px;
+        :root {
+            --bg: #07070a;
+            --panel: #141418;
+            --border: rgba(255, 255, 255, .12);
+            --text: rgba(255, 255, 255, .92);
+            --muted: rgba(255, 255, 255, .65);
+            --accent: #ff0033;
+            --radius: 18px;
         }
-        *{box-sizing:border-box}
-        body{
-            margin:0; min-height:100vh;
-            font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-            color:var(--text);
-            background: radial-gradient(900px 600px at 50% 0%, rgba(255,0,51,.14), transparent 55%), var(--bg);
-            display:flex; justify-content:center;
+
+        * {
+            box-sizing: border-box
         }
-        .wrap{width:min(560px,100%); padding:18px 16px 28px;}
-        h1{margin:10px 0 4px; font-weight:850; letter-spacing:-.5px; text-align:center}
-        .sub{margin:0 0 16px; text-align:center; color:var(--muted); font-size:14px}
-        .panel{
-            background:var(--panel);
-            border:1px solid var(--border);
-            border-radius:var(--radius);
-            padding:14px;
-            margin:12px 0;
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            color: var(--text);
+            background: radial-gradient(900px 600px at 50% 0%, rgba(255, 0, 51, .14), transparent 55%), var(--bg);
+            display: flex;
+            justify-content: center;
         }
-        .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-        button{
-            padding:12px 14px;
-            border-radius:14px;
-            border:1px solid var(--border);
-            background:rgba(255,255,255,.06);
-            color:var(--text);
-            font-weight:750;
-            cursor:pointer;
+
+        .wrap {
+            width: min(560px, 100%);
+            padding: 18px 16px 28px;
         }
-        button.primary{
-            background:var(--accent);
-            border-color:var(--accent);
-            color:#0b0c10;
+
+        h1 {
+            margin: 10px 0 4px;
+            font-weight: 850;
+            letter-spacing: -.5px;
+            text-align: center
         }
-        button:disabled{opacity:.55; cursor:not-allowed}
-        input{
-            flex:1; min-width:220px;
-            padding:12px 14px;
-            border-radius:14px;
-            border:1px solid var(--border);
-            background:rgba(0,0,0,.25);
-            color:var(--text);
-            outline:none;
+
+        .sub {
+            margin: 0 0 16px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px
         }
-        input::placeholder{color:rgba(255,255,255,.4)}
-        #reader{width:100%; border-radius:14px; overflow:hidden; margin-top:12px; display:none}
-        .msg{margin-top:10px; font-size:13px; color:var(--muted)}
-        .ok{color:#b7ffcf}
-        .err{color:#ffb3b3}
-        a{color:var(--accent)}
-        code{color:rgba(255,255,255,.85)}
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            margin: 12px 0;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        button {
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .06);
+            color: var(--text);
+            font-weight: 750;
+            cursor: pointer;
+        }
+
+        button.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #0b0c10;
+        }
+
+        button:disabled {
+            opacity: .55;
+            cursor: not-allowed
+        }
+
+        input {
+            flex: 1;
+            min-width: 220px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, .25);
+            color: var(--text);
+            outline: none;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, .4)
+        }
+
+        #reader {
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-top: 12px;
+            display: none
+        }
+
+        .msg {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .ok {
+            color: #b7ffcf
+        }
+
+        .err {
+            color: #ffb3b3
+        }
+
+        a {
+            color: var(--accent)
+        }
+
+        code {
+            color: rgba(255, 255, 255, .85)
+        }
     </style>
 </head>
 
@@ -77,14 +145,15 @@
         <div id="reader"></div>
         <div id="scanStatus" class="msg"></div>
     </div>
-</div>
 
-<div class="panel">
-    <div class="row">
-        <div><b>Sensor Debug</b></div>
-        <button class="primary" id="debugBtn">🧪 Sensor Debug starten</button>
-        <div>z: <span id="debugZ">—</span></div>
-        <div>Status: <span id="debugState">Warte…</span></div>
+
+    <div class="panel">
+        <div class="row">
+            <div><b>Sensor Debug</b></div>
+            <button class="primary" id="debugBtn">🧪 Sensor Debug starten</button>
+            <div>z: <span id="debugZ">—</span></div>
+            <div>Status: <span id="debugState">Warte…</span></div>
+        </div>
     </div>
 </div>
 
@@ -97,7 +166,7 @@
 
     const $ = (id) => document.getElementById(id);
 
-    function extractVideoId(text){
+    function extractVideoId(text) {
         text = (text || "").trim();
 
         // youtu.be/<id>
@@ -118,14 +187,15 @@
 
         return null;
     }
-    function startDebugMotion(){
 
-        async function ensurePermission(){
+    function startDebugMotion() {
+
+        async function ensurePermission() {
             if (typeof DeviceMotionEvent !== "undefined" &&
                 typeof DeviceMotionEvent.requestPermission === "function") {
 
                 const res = await DeviceMotionEvent.requestPermission();
-                if (res !== "granted"){
+                if (res !== "granted") {
                     alert("Sensor Permission verweigert");
                     return false;
                 }
@@ -133,31 +203,30 @@
             return true;
         }
 
-        function onMotion(e){
+        function onMotion(e) {
             const g = e.accelerationIncludingGravity;
             if (!g || typeof g.z !== "number") return;
 
             const z = g.z;
             document.getElementById("debugZ").textContent = z.toFixed(2);
 
-            if (z > 7){
+            if (z > 7) {
                 document.getElementById("debugState").textContent = "📱 Display nach oben";
-            }
-            else if (z < -7){
+            } else if (z < -7) {
                 document.getElementById("debugState").textContent = "📱 Display nach unten";
-            }
-            else{
+            } else {
                 document.getElementById("debugState").textContent = "↔️ Gekippt / seitlich";
             }
         }
 
         ensurePermission().then(ok => {
-            if (ok){
-                window.addEventListener("devicemotion", onMotion, { passive: true });
+            if (ok) {
+                window.addEventListener("devicemotion", onMotion, {passive: true});
             }
         });
     }
-    function openYouTubeMusic(videoId){
+
+    function openYouTubeMusic(videoId) {
         const webUrl = `https://music.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
 
         const ua = navigator.userAgent || "";
@@ -172,7 +241,9 @@
             window.location.href = intentUrl;
 
             // Fallback (falls App nicht installiert)
-            setTimeout(() => { window.location.href = webUrl; }, 900);
+            setTimeout(() => {
+                window.location.href = webUrl;
+            }, 900);
             return;
         }
 
@@ -185,7 +256,9 @@
             window.location.href = appUrl;
 
             // Fallback auf Web nach kurzer Zeit
-            setTimeout(() => { window.location.href = webUrl; }, 900);
+            setTimeout(() => {
+                window.location.href = webUrl;
+            }, 900);
             return;
         }
 
@@ -194,18 +267,21 @@
     }
 
 
-    async function handleValue(value, msgElId){
+    async function handleValue(value, msgElId) {
         const id = extractVideoId(value);
 
-        if (!id){
+        if (!id) {
             $(msgElId).innerHTML =
                 `<span class="err">Kein Video-ID erkannt.</span>`;
             return;
         }
 
         // Scanner stoppen
-        if (scanner){
-            try { await scanner.stop(); } catch(e){}
+        if (scanner) {
+            try {
+                await scanner.stop();
+            } catch (e) {
+            }
         }
 
         $(msgElId).innerHTML = `
@@ -220,13 +296,13 @@
 
         startOrientationListener(id);
     }
-    
-    function startOrientationListener(videoId){
 
-        function handleOrientation(event){
+    function startOrientationListener(videoId) {
+
+        function handleOrientation(event) {
             const beta = event.beta; // Vor/Zurück-Neigung
 
-            if (beta !== null && Math.abs(beta) > 150){
+            if (beta !== null && Math.abs(beta) > 150) {
                 window.removeEventListener("deviceorientation", handleOrientation);
                 openYouTubeMusic(videoId);
             }
@@ -253,57 +329,62 @@
     }
 
 
-
-    async function startScanner(){
+    async function startScanner() {
         $("scanStatus").textContent = "Starte Kamera…";
         $("reader").style.display = "block";
         $("reader").innerHTML = "";
 
         scanner = new Html5Qrcode("reader");
-        const config = { fps: 12, qrbox: { width: 250, height: 250 } };
+        const config = {fps: 12, qrbox: {width: 250, height: 250}};
 
         const onScanSuccess = async (decodedText) => {
             await handleValue(decodedText, "scanStatus");
         };
 
         // Prefer back camera; fallback to first camera
-        try{
-            await scanner.start({ facingMode: "environment" }, config, onScanSuccess);
-        }catch(e1){
+        try {
+            await scanner.start({facingMode: "environment"}, config, onScanSuccess);
+        } catch (e1) {
             console.warn("facingMode environment failed:", e1);
             const cams = await Html5Qrcode.getCameras();
-            if (!cams || cams.length === 0){
+            if (!cams || cams.length === 0) {
                 throw new Error("Keine Kamera gefunden (Berechtigung?)");
             }
-            await scanner.start({ deviceId: { exact: cams[0].id } }, config, onScanSuccess);
+            await scanner.start({deviceId: {exact: cams[0].id}}, config, onScanSuccess);
         }
 
         $("btnStart").disabled = true;
         $("btnStop").disabled = false;
 
         // Torch availability
-        try{
+        try {
             const caps = await scanner.getRunningTrackCapabilities();
-            if (caps && caps.torch){
+            if (caps && caps.torch) {
                 $("btnTorch").disabled = false;
             } else {
                 $("btnTorch").disabled = true;
             }
-        }catch(e){
+        } catch (e) {
             $("btnTorch").disabled = true;
         }
 
         $("scanStatus").textContent = "Scanner läuft. QR in die Box halten.";
     }
 
-    async function stopScanner(){
+    async function stopScanner() {
         torchOn = false;
         $("btnTorch").textContent = "🔦 Licht";
         $("btnTorch").disabled = true;
 
-        if (scanner){
-            try{ await scanner.stop(); }catch(e){}
-            try{ await scanner.clear(); }catch(e){}
+        if (scanner) {
+            try {
+                await scanner.stop();
+            } catch (e) {
+            }
+            try {
+                await scanner.clear();
+            } catch (e) {
+            }
             scanner = null;
         }
         $("reader").style.display = "none";
@@ -312,13 +393,13 @@
         $("btnStop").disabled = true;
     }
 
-    async function toggleTorch(){
+    async function toggleTorch() {
         if (!scanner) return;
-        try{
+        try {
             torchOn = !torchOn;
-            await scanner.applyVideoConstraints({ advanced: [{ torch: torchOn }] });
+            await scanner.applyVideoConstraints({advanced: [{torch: torchOn}]});
             $("btnTorch").textContent = torchOn ? "🔦 Licht aus" : "🔦 Licht";
-        }catch(e){
+        } catch (e) {
             $("scanStatus").innerHTML = `<span class="err">Licht nicht unterstützt.</span>`;
             $("btnTorch").disabled = true;
         }
@@ -334,7 +415,7 @@
     $("btnStop").addEventListener("click", () => stopScanner());
     $("btnTorch").addEventListener("click", () => toggleTorch());
     $("debugBtn").addEventListener("click", () => startDebugMotion());
-    
+
     $("manualGo").addEventListener("click", () =>
         handleValue($("manualInput").value, "manualMsg").catch(e => {
             $("manualMsg").innerHTML = `<span class="err">${e?.message || e}</span>`;
@@ -344,8 +425,8 @@
     $("manualInput").addEventListener("keydown", (e) => {
         if (e.key === "Enter") $("manualGo").click();
     });
-    
-    
+
+
 </script>
 </body>
 </html>
