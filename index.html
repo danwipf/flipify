@@ -267,7 +267,7 @@
 
   async function stopScanner(){
     torchOn = false;
-    $("btnTorch").textContent = "🔦 Licht";
+    $("btnTorch").textContent = "🔦";
     $("btnTorch").disabled = true;
 
     if (scanner){
@@ -286,7 +286,7 @@
     try{
       torchOn = !torchOn;
       await scanner.applyVideoConstraints({ advanced: [{ torch: torchOn }] });
-      $("btnTorch").textContent = torchOn ? "🔦 Licht aus" : "🔦 Licht";
+      $("btnTorch").textContent = torchOn ? "" : "";
     }catch(e){
       $("scanStatus").innerHTML = `<span class="err">Licht nicht unterstützt.</span>`;
       $("btnTorch").disabled = true;
