@@ -1,312 +1,378 @@
 <!doctype html>
 <html lang="de">
 <head>
-  
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Caveat:wght@600&display=swap" rel="stylesheet">
-  
-  <title>flipify by fabia</title>
-  <style>
-    :root{
-      --bg:#07070a; --panel:#141418; --border:rgba(255,255,255,.12);
-      --text:rgba(255,255,255,.92); --muted:rgba(255,255,255,.65);
-      --accent:#ff0033; --radius:18px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; min-height:100vh;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      color:var(--text);
-      background:radial-gradient(900px 600px at 50% 0%, rgba(255,0,51,.14), transparent 55%), var(--bg);
-      display:flex; justify-content:center;
-    }
-    .wrap{width:min(560px,100%); padding:18px 16px 28px;}
-    h1{margin:10px 0 4px; font-weight:850; letter-spacing:-.5px; text-align:center}
-    .sub{margin:0 0 16px; text-align:center; color:var(--muted); font-size:14px}
-    .panel{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:14px;
-      margin:12px 0;
-    }
-    /* --- Layout row --- */
-    .row{
-      display:flex;
-      gap:12px;
-      justify-content:center;
-      align-items:center;
-      flex-wrap:wrap;
-    }
 
-    /* --- Buttons (emoji style) --- */
-    button{
-      width:60px;
-      height:60px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      font-size:22px;
-      font-weight:700;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:0;              /* wichtig: sonst wird’s nicht quadratisch */
-      line-height:1;
-    }
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
-    button.primary{
-      background:var(--accent);
-      border-color:var(--accent);
-      color:#0b0c10;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Caveat:wght@600&display=swap" rel="stylesheet">
 
-    button:disabled{
-      opacity:.4;
-      cursor:not-allowed;
-    }
+    <title>flipify by fabia</title>
+    <style>
+        :root {
+            --bg: #07070a;
+            --panel: #141418;
+            --border: rgba(255, 255, 255, .12);
+            --text: rgba(255, 255, 255, .92);
+            --muted: rgba(255, 255, 255, .65);
+            --accent: #ff0033;
+            --radius: 18px;
+        }
 
-    /* --- Haupt-Play Button breit --- */
-    #btnOpen{
-      width:100%;
-      height:60px;
-      font-size:20px;
-      border-radius:18px;
-    }
+        * {
+            box-sizing: border-box
+        }
 
-    /* --- Fallback-Link dezenter --- */
-    #webFallback{
-      font-size:13px;
-      opacity:.75;
-    }
-    
-    .msg{margin-top:10px; font-size:14px; color:var(--muted)}
-    .ok{color:#b7ffcf}
-    .err{color:#ffb3b3}
-    a{color:var(--accent)}
-    code{color:rgba(255,255,255,.85)}
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            color: var(--text);
+            background: radial-gradient(900px 600px at 50% 0%, rgba(255, 0, 51, .14), transparent 55%), var(--bg);
+            display: flex;
+            justify-content: center;
+        }
 
-    .hero {
-      background: #a0216c;
-      padding: 40px 20px;
-      text-align: center;
-      border-radius: 20px;
-      margin-bottom: 20px;
-    }
+        .wrap {
+            width: min(560px, 100%);
+            padding: 18px 16px 28px;
+        }
 
-    .brand {
-      font-family: 'Pacifico', cursive;
-      font-size: 64px;
-      color: #ffcc00;
-      display: inline-block;
-    }
+        h1 {
+            margin: 10px 0 4px;
+            font-weight: 850;
+            letter-spacing: -.5px;
+            text-align: center
+        }
 
-    .by {
-      font-family: 'Caveat', cursive;
-      font-size: 42px;
-      color: #000;
-      margin-left: 20px;
-    }
-    
-  </style>
+        .sub {
+            margin: 0 0 16px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            margin: 12px 0;
+        }
+
+        /* --- Layout row --- */
+        .row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* --- Buttons (emoji style) --- */
+        button {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .06);
+            color: var(--text);
+            font-size: 22px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0; /* wichtig: sonst wird’s nicht quadratisch */
+            line-height: 1;
+        }
+
+        button.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #0b0c10;
+        }
+
+        button:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        /* --- Haupt-Play Button breit --- */
+        #btnOpen {
+            width: 100%;
+            height: 60px;
+            font-size: 20px;
+            border-radius: 18px;
+        }
+
+        /* --- Fallback-Link dezenter --- */
+        #webFallback {
+            font-size: 13px;
+            opacity: .75;
+        }
+
+        .msg {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        .msg_scanner {
+            margin-top: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            color: var(--muted)
+        }
+
+        .ok {
+            color: #b7ffcf
+        }
+
+        .err {
+            color: #ffb3b3
+        }
+
+        a {
+            color: var(--accent)
+        }
+
+        code {
+            color: rgba(255, 255, 255, .85)
+        }
+
+        .hero {
+            background: #a0216c;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .brand {
+            font-family: 'Pacifico', cursive;
+            font-size: 64px;
+            color: #ffcc00;
+            display: inline-block;
+        }
+
+        .by {
+            font-family: 'Caveat', cursive;
+            font-size: 42px;
+            color: #000;
+            margin-left: 20px;
+        }
+
+    </style>
 </head>
 
 <body>
 <div class="wrap">
-  
-  <div class="hero">
-    <span class="brand">flipify</span>
-    <span class="by">by fabia</span>
-  </div>
-<!--  <p class="sub">QR scannen → Button tippen → YouTube Music App</p>-->
 
-  <div class="panel">
-    <div class="row">
-      <button class="primary" id="btnStart">📷</button>
-      <button id="btnStop" disabled>🛑</button>
-      <button id="btnTorch" disabled>🔦</button>
+    <div class="hero">
+        <span class="brand">flipify</span>
+        <span class="by">by fabia</span>
     </div>
+    <!--  <p class="sub">QR scannen → Button tippen → YouTube Music App</p>-->
 
-    <div id="reader"></div>
+    <div class="panel">
+        <div class="row">
+            <button class="primary" id="btnStart">📷</button>
+            <button id="btnStop" disabled>🛑</button>
+            <button id="btnTorch" disabled>🔦</button>
+        </div>
 
-    <div id="scanStatus" class="msg">
-      Noch nichts gescannt.
+        <div id="reader"></div>
+
+        <div id="scanStatus" class="msg_scanner">
+            Noch nichts gescannt.
+        </div>
+
+        <div class="row" style="margin-top:12px">
+            <button class="primary" id="btnOpen" disabled>▶️</button>
+            <a id="webFallback" href="#" target="_blank" rel="noreferrer" style="display:none">Es goht nöd!</a>
+        </div>
+
+        <!--    <div class="msg">-->
+        <!--      QR darf sein: <code>https://music.youtube.com/watch?v=...</code> oder <code>https://www.youtube.com/watch?v=...</code>-->
+        <!--    </div>-->
     </div>
-
-    <div class="row" style="margin-top:12px">
-      <button class="primary" id="btnOpen" disabled>▶️</button>
-      <a id="webFallback" href="#" target="_blank" rel="noreferrer" style="display:none">Es goht nöd!</a>
-    </div>
-
-<!--    <div class="msg">-->
-<!--      QR darf sein: <code>https://music.youtube.com/watch?v=...</code> oder <code>https://www.youtube.com/watch?v=...</code>-->
-<!--    </div>-->
-  </div>
 </div>
 
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-  let scanner = null;
-  let torchOn = false;
+    let scanner = null;
+    let torchOn = false;
 
-  // Nur "momentan" gemerkter Scan (wird bei jedem Scan überschrieben)
-  let currentVideoId = null;
+    // Nur "momentan" gemerkter Scan (wird bei jedem Scan überschrieben)
+    let currentVideoId = null;
 
-  const $ = (id) => document.getElementById(id);
+    const $ = (id) => document.getElementById(id);
 
-  function extractVideoId(text){
-    text = (text || "").trim();
+    function extractVideoId(text) {
+        text = (text || "").trim();
 
-    let m = text.match(/youtu\.be\/([a-zA-Z0-9_-]{6,})/);
-    if (m) return m[1];
+        let m = text.match(/youtu\.be\/([a-zA-Z0-9_-]{6,})/);
+        if (m) return m[1];
 
-    m = text.match(/[?&]v=([a-zA-Z0-9_-]{6,})/);
-    if (m) return m[1];
+        m = text.match(/[?&]v=([a-zA-Z0-9_-]{6,})/);
+        if (m) return m[1];
 
-    m = text.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,})/);
-    if (m) return m[1];
+        m = text.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,})/);
+        if (m) return m[1];
 
-    m = text.match(/^([a-zA-Z0-9_-]{6,})$/);
-    if (m) return m[1];
+        m = text.match(/^([a-zA-Z0-9_-]{6,})$/);
+        if (m) return m[1];
 
-    return null;
-  }
-
-  function openYouTubeMusic(videoId){
-    const webUrl = `https://music.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
-
-    const ua = navigator.userAgent || "";
-    const isAndroid = /Android/i.test(ua);
-    const isIOS = /iPhone|iPad|iPod/i.test(ua);
-
-    if (isAndroid){
-      const intentUrl =
-        `intent://music.youtube.com/watch?v=${encodeURIComponent(videoId)}` +
-        `#Intent;scheme=https;package=com.google.android.apps.youtube.music;end`;
-      window.location.href = intentUrl;
-
-      // Website fallback behalten (wenn App nicht installiert / nicht klappt)
-      setTimeout(() => { window.location.href = webUrl; }, 1000);
-      return;
+        return null;
     }
 
-    // iOS: Universal Link (entscheidet selbst, App oder Web)
-    window.location.href = webUrl;
-  }
+    function openYouTubeMusic(videoId) {
+        const webUrl = `https://music.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
 
-  function setScanned(id){
-    currentVideoId = id; // überschreibt immer – keine History
+        const ua = navigator.userAgent || "";
+        const isAndroid = /Android/i.test(ua);
+        const isIOS = /iPhone|iPad|iPod/i.test(ua);
 
-    $("scanStatus").innerHTML = `✅ Gescannt: <span class="ok">${id}</span>`;
-    $("btnOpen").disabled = false;
+        if (isAndroid) {
+            const intentUrl =
+                `intent://music.youtube.com/watch?v=${encodeURIComponent(videoId)}` +
+                `#Intent;scheme=https;package=com.google.android.apps.youtube.music;end`;
+            window.location.href = intentUrl;
 
-    const webUrl = `https://music.youtube.com/watch?v=${encodeURIComponent(id)}`;
-    $("webFallback").href = webUrl;
-    $("webFallback").style.display = "inline";
-    $("webFallback").textContent = "Website-Fallback öffnen";
-  }
+            // Website fallback behalten (wenn App nicht installiert / nicht klappt)
+            setTimeout(() => {
+                window.location.href = webUrl;
+            }, 1000);
+            return;
+        }
 
-  async function startScanner(){
-    $("scanStatus").textContent = "Starte Kamera…";
-    $("reader").style.display = "block";
-    $("reader").innerHTML = "";
-
-    currentVideoId = null;
-    $("btnOpen").disabled = true;
-    $("webFallback").style.display = "none";
-    
-    scanner = new Html5Qrcode("reader");
-    const config = { fps: 12, qrbox: { width: 250, height: 250 } };
-
-      const onScanSuccess = async (decodedText) => {
-          const id = extractVideoId(decodedText);
-          if (!id){
-              $("scanStatus").innerHTML = `<span class="err">QR erkannt, aber keine Video-ID gefunden.</span>`;
-              return;
-          }
-
-          // ✅ Scanner sofort stoppen (1x Scan)
-          if (scanner){
-              try { await scanner.stop(); } catch(e){}
-              try { await scanner.clear(); } catch(e){}
-              scanner = null;
-          }
-
-          $("reader").style.display = "none";
-          $("btnStart").disabled = false;
-          $("btnStop").disabled = true;
-
-          setScanned(id);
-      };
-
-    try{
-      await scanner.start({ facingMode: "environment" }, config, onScanSuccess);
-    }catch(e1){
-      const cams = await Html5Qrcode.getCameras();
-      if (!cams || cams.length === 0) throw new Error("Keine Kamera gefunden (Berechtigung?)");
-      await scanner.start({ deviceId: { exact: cams[0].id } }, config, onScanSuccess);
+        // iOS: Universal Link (entscheidet selbst, App oder Web)
+        window.location.href = webUrl;
     }
 
-    $("btnStart").disabled = true;
-    $("btnStop").disabled = false;
+    function setScanned(id) {
+        currentVideoId = id; // überschreibt immer – keine History
 
-    // Torch availability
-    try{
-      const caps = await scanner.getRunningTrackCapabilities();
-      $("btnTorch").disabled = !(caps && caps.torch);
-    }catch(e){
-      $("btnTorch").disabled = true;
+        $("scanStatus").innerHTML = `✅ Gescannt: <span class="ok">${id}</span>`;
+        $("btnOpen").disabled = false;
+
+        const webUrl = `https://music.youtube.com/watch?v=${encodeURIComponent(id)}`;
+        $("webFallback").href = webUrl;
+        $("webFallback").style.display = "inline";
+        $("webFallback").textContent = "Website-Fallback öffnen";
     }
 
-    $("scanStatus").textContent = "Scanner läuft. QR in die Box halten.";
-  }
+    async function startScanner() {
+        $("scanStatus").textContent = "Starte Kamera…";
+        $("reader").style.display = "block";
+        $("reader").innerHTML = "";
 
-  async function stopScanner(){
-    torchOn = false;
-    $("btnTorch").textContent = "🔦";
-    $("btnTorch").disabled = true;
+        currentVideoId = null;
+        $("btnOpen").disabled = true;
+        $("webFallback").style.display = "none";
 
-    if (scanner){
-      try{ await scanner.stop(); }catch(e){}
-      try{ await scanner.clear(); }catch(e){}
-      scanner = null;
+        scanner = new Html5Qrcode("reader");
+        const config = {fps: 12, qrbox: {width: 250, height: 250}};
+
+        const onScanSuccess = async (decodedText) => {
+            const id = extractVideoId(decodedText);
+            if (!id) {
+                $("scanStatus").innerHTML = `<span class="err">QR erkannt, aber keine Video-ID gefunden.</span>`;
+                return;
+            }
+
+            // ✅ Scanner sofort stoppen (1x Scan)
+            if (scanner) {
+                try {
+                    await scanner.stop();
+                } catch (e) {
+                }
+                try {
+                    await scanner.clear();
+                } catch (e) {
+                }
+                scanner = null;
+            }
+
+            $("reader").style.display = "none";
+            $("btnStart").disabled = false;
+            $("btnStop").disabled = true;
+
+            setScanned(id);
+        };
+
+        try {
+            await scanner.start({facingMode: "environment"}, config, onScanSuccess);
+        } catch (e1) {
+            const cams = await Html5Qrcode.getCameras();
+            if (!cams || cams.length === 0) throw new Error("Keine Kamera gefunden (Berechtigung?)");
+            await scanner.start({deviceId: {exact: cams[0].id}}, config, onScanSuccess);
+        }
+
+        $("btnStart").disabled = true;
+        $("btnStop").disabled = false;
+
+        // Torch availability
+        try {
+            const caps = await scanner.getRunningTrackCapabilities();
+            $("btnTorch").disabled = !(caps && caps.torch);
+        } catch (e) {
+            $("btnTorch").disabled = true;
+        }
+
+        $("scanStatus").textContent = "Scanner läuft. QR in die Box halten.";
     }
 
-    $("reader").style.display = "none";
-    $("btnStart").disabled = false;
-    $("btnStop").disabled = true;
-  }
+    async function stopScanner() {
+        torchOn = false;
+        $("btnTorch").textContent = "🔦";
+        $("btnTorch").disabled = true;
 
-  async function toggleTorch(){
-    if (!scanner) return;
-    try{
-      torchOn = !torchOn;
-      await scanner.applyVideoConstraints({ advanced: [{ torch: torchOn }] });
-      $("btnTorch").textContent = torchOn ? "" : "";
-    }catch(e){
-      $("scanStatus").innerHTML = `<span class="err">Licht nicht unterstützt.</span>`;
-      $("btnTorch").disabled = true;
+        if (scanner) {
+            try {
+                await scanner.stop();
+            } catch (e) {
+            }
+            try {
+                await scanner.clear();
+            } catch (e) {
+            }
+            scanner = null;
+        }
+
+        $("reader").style.display = "none";
+        $("btnStart").disabled = false;
+        $("btnStop").disabled = true;
     }
-  }
 
-  // UI events
-  $("btnStart").addEventListener("click", () => startScanner().catch(err => {
-    console.error(err);
-    $("scanStatus").innerHTML = `<span class="err">Kamera konnte nicht gestartet werden: ${err?.message || err}</span>`;
-    stopScanner();
-  }));
+    async function toggleTorch() {
+        if (!scanner) return;
+        try {
+            torchOn = !torchOn;
+            await scanner.applyVideoConstraints({advanced: [{torch: torchOn}]});
+            $("btnTorch").textContent = torchOn ? "" : "";
+        } catch (e) {
+            $("scanStatus").innerHTML = `<span class="err">Licht nicht unterstützt.</span>`;
+            $("btnTorch").disabled = true;
+        }
+    }
 
-  $("btnStop").addEventListener("click", () => stopScanner());
-  $("btnTorch").addEventListener("click", () => toggleTorch());
+    // UI events
+    $("btnStart").addEventListener("click", () => startScanner().catch(err => {
+        console.error(err);
+        $("scanStatus").innerHTML = `<span class="err">Kamera konnte nicht gestartet werden: ${err?.message || err}</span>`;
+        stopScanner();
+    }));
 
-  $("btnOpen").addEventListener("click", () => {
-    if (!currentVideoId) return;
-    openYouTubeMusic(currentVideoId);
-  });
+    $("btnStop").addEventListener("click", () => stopScanner());
+    $("btnTorch").addEventListener("click", () => toggleTorch());
+
+    $("btnOpen").addEventListener("click", () => {
+        if (!currentVideoId) return;
+        openYouTubeMusic(currentVideoId);
+    });
 </script>
 </body>
 </html>
