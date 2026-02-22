@@ -151,18 +151,33 @@
     $("reader").style.display = "block";
     $("reader").innerHTML = "";
 
+    currentVideoId = null;
+    $("btnOpen").disabled = true;
+    $("webFallback").style.display = "none";
+    
     scanner = new Html5Qrcode("reader");
     const config = { fps: 12, qrbox: { width: 250, height: 250 } };
 
-    const onScanSuccess = async (decodedText) => {
-      const id = extractVideoId(decodedText);
-      if (!id){
-        $("scanStatus").innerHTML = `<span class="err">QR erkannt, aber keine Video-ID gefunden.</span>`;
-        return;
-      }
-      // Wichtig: auch gleicher QR zählt wie neuer Moment → einfach überschreiben
-      setScanned(id);
-    };
+      const onScanSuccess = async (decodedText) => {
+          const id = extractVideoId(decodedText);
+          if (!id){
+              $("scanStatus").innerHTML = `<span class="err">QR erkannt, aber keine Video-ID gefunden.</span>`;
+              return;
+          }
+
+          // ✅ Scanner sofort stoppen (1x Scan)
+          if (scanner){
+              try { await scanner.stop(); } catch(e){}
+              try { await scanner.clear(); } catch(e){}
+              scanner = null;
+          }
+
+          $("reader").style.display = "none";
+          $("btnStart").disabled = false;
+          $("btnStop").disabled = true;
+
+          setScanned(id);
+      };
 
     try{
       await scanner.start({ facingMode: "environment" }, config, onScanSuccess);
