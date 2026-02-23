@@ -170,6 +170,8 @@
             color: #000;
             margin-left: 20px;
         }
+        .scan-only { display: none; }
+.scan-result { display: none; }
 
     </style>
 </head>
@@ -185,10 +187,12 @@
 
     <div class="panel">
         <div class="row">
-            <button class="primary" id="btnStart">📷</button>
-            <button id="btnStop" disabled>🛑</button>
-            <button id="btnTorch" disabled>🔦</button>
-        </div>
+  <button class="primary" id="btnStart">📷</button>
+  <button id="btnStop" class="scan-only" disabled>🛑</button>
+  <button id="btnTorch" class="scan-only" disabled>🔦</button>
+</div>
+
+
 
         <div id="reader"></div>
 
@@ -197,9 +201,9 @@
         </div>
 
         <div class="row" style="margin-top:12px">
-            <button class="primary" id="btnOpen" disabled>▶️</button>
-            <a id="webFallback" href="#" target="_blank" rel="noreferrer" style="display:none">Es goht nöd!</a>
-        </div>
+  <button class="primary scan-result" id="btnOpen" disabled>▶️</button>
+  <a id="webFallback" class="scan-result" href="#" target="_blank" rel="noreferrer" style="display:none">Es goht nöd!</a>
+</div>
 
         <!--    <div class="msg">-->
         <!--      QR darf sein: <code>https://music.youtube.com/watch?v=...</code> oder <code>https://www.youtube.com/watch?v=...</code>-->
@@ -234,7 +238,22 @@
 
         return null;
     }
+function setScannerUI(isRunning){
+  // Start Button
+  $("btnStart").style.display = isRunning ? "none" : "flex";
 
+  // Stop + Torch nur wenn Scanner läuft
+  $("btnStop").style.display = isRunning ? "flex" : "none";
+  $("btnTorch").style.display = isRunning ? "flex" : "none";
+}
+
+function setScanResultUI(hasScan){
+  // Play + Fallback nur wenn gescannt wurde
+  $("btnOpen").style.display = hasScan ? "flex" : "none";
+  $("webFallback").style.display = hasScan ? "inline" : "none";
+
+  $("btnOpen").disabled = !hasScan;
+}
     function openYouTubeMusic(videoId) {
         const webUrl = `https://music.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
 
@@ -260,6 +279,7 @@
     }
 
     function setScanned(id) {
+        setScanResultUI(true);
         currentVideoId = id; // überschreibt immer – keine History
 
         $("scanStatus").innerHTML = `✅ Gescannt: <span class="ok">${id}</span>`;
@@ -272,6 +292,10 @@
     }
 
     async function startScanner() {
+        
+        setScannerUI(true);
+setScanResultUI(false);
+
         $("scanStatus").textContent = "Starte Kamera…";
         $("reader").style.display = "block";
         $("reader").innerHTML = "";
@@ -333,6 +357,7 @@
     }
 
     async function stopScanner() {
+        
         torchOn = false;
         $("btnTorch").textContent = "🔦";
         $("btnTorch").disabled = true;
@@ -352,6 +377,7 @@
         $("reader").style.display = "none";
         $("btnStart").disabled = false;
         $("btnStop").disabled = true;
+        setScannerUI(false);
     }
 
     async function toggleTorch() {
@@ -380,6 +406,8 @@
         if (!currentVideoId) return;
         openYouTubeMusic(currentVideoId);
     });
+    setScannerUI(false);
+setScanResultUI(false);
 </script>
 </body>
 </html>
