@@ -203,7 +203,7 @@
         <div id="reader"></div>
 
         <div id="scanStatus" class="msg_scanner">
-            noch nichts gescannt
+            
         </div>
 
         <div class="row" style="margin-top:12px">
@@ -383,6 +383,7 @@ setScanResultUI(false);
         $("reader").style.display = "none";
         $("btnStart").disabled = false;
         $("btnStop").disabled = true;
+        $("scanStatus").textContent = "";
         setScannerUI(false);
     }
 
